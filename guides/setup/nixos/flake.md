@@ -50,6 +50,7 @@ After applying the configuration, reboot your PC.
     nixosConfigurations.default = nixpkgs.lib.nixosSystem {
       specialArgs = {inherit inputs;};
       modules = [
+        inputs.nixos-rocksmith.nixosModules.default
         ./configuration.nix
       ];
     };
