@@ -20,9 +20,9 @@ Thanks to [TimP4w](https://github.com/TimP4w) for writing this.
 
 # Tested and working with
 ```
-NixOS 25.05.804113.6c64dabd3aa8 (Warbler) [64-bit]
+NixOS 25.11.20250910.ab0f360 (Xantusia) [64-bit]
 Wineasio: wineasio-1.2.0
-Pipewire Jack: pipewire-1.4.2-jack
+Pipewire Jack: pipewire-1.4.7-jack
 RS_ASIO 0.7.4
 Proton: Proton - Experimental
 ```
@@ -78,8 +78,8 @@ After applying the configuration, reboot your PC.
   programs.steam = {
     enable = true;
     package = pkgs.steam.override {
-      extraLibraries = pkgs: [ pkgs.pkgsi686Linux.pipewire.jack ]; # Adds pipewire jack (32-bit)
-      extraPkgs = pkgs: [ pkgs.wineasio ]; # Adds wineasio
+      extraLibraries = pkgs': with pkgs'; [ pkgsi686Linux.pipewire.jack ]; # Adds pipewire jack (32-bit)
+      extraPkgs = pkgs': with pkgs'; [ wineasio ]; # Adds wineasio
     };
   };
 
@@ -223,7 +223,7 @@ First it will ask you if you want to override its default values, you can press 
 
 - Proton Version: the proton version you have installed. By default it assumes `Proton - Experimental`. You can select another version by writing the corresponding number and pressing enter.
 
-- RS_ASIO: The RS_ASIO you want to install. Currently it downloads the version `0.7.1`.
+- RS_ASIO: The RS_ASIO you want to install. Currently it downloads the version `0.7.4`.
 
 Reboot your PC after the script finishes.
 
@@ -233,7 +233,7 @@ Reboot your PC after the script finishes.
 
 Copy the following command and paste it as Launch Options (Steam > Rocksmith 2014 > Right Click > Properties... > General > Launch Options)
 ``` 
-LD_PRELOAD=/lib/libjack.so PIPEWIRE_LATENCY=256/48000 %command%
+LD_PRELOAD=/usr/lib32/libjack.so PIPEWIRE_LATENCY=256/48000 %command%
 ```
 
 ### Test and Enjoy

@@ -16,7 +16,7 @@ WINEASIODLLS=(
 )
 STEAMPATH="/home/${USER}/.steam/steam"
 WINEPREFIX="${STEAMPATH}/steamapps/compatdata/221680/pfx/"
-LAUNCH_OPTIONS="LD_PRELOAD=/lib32/libjack.so PIPEWIRE_LATENCY=256/48000 %command%"
+LAUNCH_OPTIONS="LD_PRELOAD=/usr/lib32/libjack.so PIPEWIRE_LATENCY=256/48000 %command%"
 
 # Defaults
 RSASIOVER="0.7.4"
@@ -162,7 +162,7 @@ check_and_prepare() {
     CHECKFILES=(
         "$WINE"
         "$WINE64"
-        "/lib/libjack.so"
+        "/usr/lib32/libjack.so"
     )
 
     CHECKPROGRAMS=(
