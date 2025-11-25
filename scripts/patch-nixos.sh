@@ -17,10 +17,11 @@ WINEASIODLLS=(
 STEAMPATH="/home/${USER}/.steam/steam"
 WINEPREFIX="${STEAMPATH}/steamapps/compatdata/221680/pfx/"
 LAUNCH_OPTIONS="LD_PRELOAD=/usr/lib32/libjack.so PIPEWIRE_LATENCY=256/48000 %command%"
+LAUNCH_OPTIONS="LD_PRELOAD=/usr/lib32/librsshim.so:/usr/lib32/libjack.so PIPEWIRE_LATENCY=256/48000 %command%"
 
 # Defaults
 RSASIOVER="0.7.4"
-PROTONVER="Proton - Experimental" 
+PROTONVER="Proton 10.0" 
 FILES_OR_DIST="files"
 PROTONPATH="${STEAMPATH}/steamapps/common/${PROTONVER}"
 WINE="${PROTONPATH}/${FILES_OR_DIST}/bin/wine"
@@ -63,23 +64,28 @@ validate_proton_input() {
 
 choose_proton() {
     echo "Please choose your proton version that you use to run Rocksmith:"
-    print_orange "0) Proton - Experimental [Default]"
-    echo "1) Proton 9.0 (Beta)"
-    echo "2) Proton 8.0"
+    print_orange "0) Proton 10.0 [Default]"
+    echo "1) Proton - Experimental"
+    echo "2) Proton 9.0 (Beta)"
+    echo "3) Proton 8.0"
 
-    read -p "Choose your Proton Version (0-2): " USERPROTONVER
+    read -p "Choose your Proton Version (0-3): " USERPROTONVER
 
     if validate_proton_input "$USERPROTONVER"; then
          case $USERPROTONVER in
             0)
-                PROTONVER="Proton - Experimental"
+                PROTONVER="Proton 10.0"
                 FILES_OR_DIST="files"
                 ;;
             1)
+                PROTONVER="Proton - Experimental"
+                FILES_OR_DIST="files"
+                ;;
+            2)
                 PROTONVER="Proton 9.0 (Beta)"
                 FILES_OR_DIST="files"  
                 ;;
-            2)
+            3)
                 PROTONVER="Proton 8.0"
                 FILES_OR_DIST="dist"
                 ;;
@@ -135,7 +141,7 @@ print_system_info() {
 }
 
 check_installed() {
-    if which $1 >/dev/null 2>&1; then
+    if which "$1" >/dev/null 2>&1; then
         echo "$1 $(print_green present)"
     else
         print_red "Required $1 is not installed!"
@@ -213,7 +219,7 @@ check_and_prepare() {
         exit 1
     fi
 
-    read -p "This script will add wineasio to proton and Rocksmith, register it and install RS_ASIO. Do you want to continue? (Y/N): " user_input
+    read -p "This script will add wineasio to Proton and Rocksmith, register it and install RS_ASIO. Do you want to continue? (y/N): " user_input
     user_input=$(echo "$user_input" | tr '[:lower:]' '[:upper:]')
     if [ "$user_input" != "Y" ]; then
         print_red "Exiting..."
@@ -240,7 +246,10 @@ patch_wineasio_32bit() {
         safe_copy "${WINEASIO32PATH}${1}" "${PROTONPATH}/${FILES_OR_DIST}/lib/wine${1}"
     fi
     if [[ $1 == *.so ]]; then
-        local wineasio_dll=$(echo ${WINEASIOPATH}${1} | sed -e 's|/i386-unix/wineasio32.dll.so|/i386-windows/wineasio32.dll|g')
+        local wineasio_dll
+
+        wineasio_dll=$(echo "${WINEASIOPATH}${1}" | sed -e 's|/i386-unix/wineasio32.dll.so|/i386-windows/wineasio32.dll|g')
+
         if [ -e "${WINEASIOPATH}${1}" ] && [ -e "${wineasio_dll}" ]; then
             echo "[Wineasio 32-bit] Copying ${wineasio_dll} in ${WINEPREFIX}/drive_c/windows/syswow64/wineasio32.dll"
             safe_copy "${wineasio_dll}" "${WINEPREFIX}/drive_c/windows/syswow64/wineasio32.dll"
@@ -265,9 +274,12 @@ patch_wineasio_64bit() {
     if [[ $1 == *.so ]]; then
         if [ ! -d "${WINEPREFIX}/drive_c/windows/syswow64" ]; then
             echo "[Wineasio] Skipping $1 because ${WINEPREFIX} is not a 64-bit system"
-            continue 
+            return 
         fi
-        local wineasio_dll=$(echo ${WINEASIOPATH}${1} | sed -e 's|/x86_64-unix/wineasio64.dll.so|/x86_64-windows/wineasio64.dll|g')
+
+        local wineasio_dll
+
+        wineasio_dll=$(echo "${WINEASIOPATH}${1}" | sed -e 's|/x86_64-unix/wineasio64.dll.so|/x86_64-windows/wineasio64.dll|g')
         if [ -e "${WINEASIOPATH}${1}" ] && [ -e "${wineasio_dll}" ]; then
             echo "[Wineasio 64-bit] Copying ${wineasio_dll} in ${WINEPREFIX}/drive_c/windows/system32/wineasio64.dll"
             safe_copy "${wineasio_dll}" "${WINEPREFIX}/drive_c/windows/system32/wineasio64.dll"
@@ -296,11 +308,11 @@ patch_rs_asio() {
 
     echo "[RS_ASIO] Dowload RS_ASIO"
     if [ ! -f "release-${RSASIOVER}.zip" ]; then
-        wget https://github.com/mdias/rs_asio/releases/download/v${RSASIOVER}/release-${RSASIOVER}.zip > /dev/null 2>&1
+        wget "https://github.com/mdias/rs_asio/releases/download/v${RSASIOVER}/release-${RSASIOVER}.zip" > /dev/null 2>&1
     fi
 
     echo "[RS_ASIO] Unzip"
-    unzip release-${RSASIOVER}.zip -d RS_ASIO
+    unzip "release-${RSASIOVER}.zip" -d RS_ASIO
 
     sed -i 's/Driver=[^ ]*/Driver=wineasio-rsasio/g' "RS_ASIO/RS_ASIO.ini"
 
@@ -316,11 +328,23 @@ finalise() {
 
     echo "First, check that the RS_ASIO.ini file is correct"
     echo
-    echo "Finally, add the following launch option to Rocksmith on steam"
+    echo "Finally, add the following launch option to Rocksmith on Steam"
     echo 
     echo "================================================================"
-    echo $LAUNCH_OPTIONS
+    echo "${LAUNCH_OPTIONS}"
     echo "================================================================"
+    echo
+    echo "Alternatively, for rs-autoconnect, add the following launch option"
+    echo "================================================================"
+    echo "${ALT_LAUNCH_OPTIONS}"
+    echo "================================================================"
+    echo
+    echo "Before launching the game, delete Rocksmith.ini"
+}
+
+clean() {
+    rm "release-${RSASIOVER}.zip"
+    rm -rf RS_ASIO
 }
 
 
@@ -330,4 +354,5 @@ print_system_info
 check_and_prepare
 patch_wineasio
 patch_rs_asio
+clean
 finalise
