@@ -13,11 +13,11 @@ Flakes - while being widely adopted and useful - are still an experimental featu
 
 # Tested and working with
 ```
-NixOS 25.11.20250910.ab0f360 (Xantusia) [64-bit]
-Wineasio: wineasio-1.2.0
-Pipewire Jack: pipewire-1.4.7-jack
+NixOS 25.11.20251122.050e09e (Xantusia) [64-bit]
+Wineasio: wineasio-1.3.0
+Pipewire Jack: pipewire-1.4.9-jack
 RS_ASIO 0.7.4
-Proton: Proton - Experimental
+Proton: Proton 10.0-3
 ```
 
 # NixOS Configuration
@@ -92,7 +92,7 @@ steam-run patch-rocksmith
 
 First it will ask you if you want to override its default values, you can press enter to accept the default.
 
-- Proton Version: the proton version you have installed. By default it assumes `Proton - Experimental`. You can select another version by writing the corresponding number and pressing enter.
+- Proton Version: the proton version you have installed. By default it assumes `Proton 10.0`. You can select another version by writing the corresponding number and pressing enter.
 
 - RS_ASIO: The RS_ASIO you want to install. Currently it downloads the version `0.7.4`.
 
