@@ -46,10 +46,8 @@ Please reboot.
 
 # Create a clean prefix
 
-Set the Proton version you want to use. There's two ways to do this. In Steam
-
-* go to `Settings` ➞ `Compatibility` ➞ `Enable Steam play for all other titles`, then restart Steam.
-* open your library, right click Rocksmith and go to`Properties` ➞ `Compatibility` and force one.
+Steam Play is now activated by default. The default one can be set by going to `Settings` ➞ `Compatibility`.
+If you want to select a Proton version on a per-game basis, Right click Rocksmith and go to `Properties` ➞ `Compatibility`.
 
 Delete or rename `$STEAMLIBRARY/steamapps/compatdata/221680`, then start Rocksmith and stop the game once it's running.
 
@@ -161,7 +159,7 @@ Errors outputted by this command are expected. The important one is the message 
 ## Installing RS_ASIO
 
 1. [Download](https://github.com/mdias/rs_asio/releases) the newest release, unpack everything to the root of your Rocksmith installation (`$STEAMLIBRARY/steamapps/common/Rocksmith2014/`)
-1. Edit RS_ASIO.ini: fill in `wineasio-rsasio` where it says `Driver=`. Do this for every Output and Input section. You could also fill in `WineASIO` instead.
+1. Edit RS_ASIO.ini: fill in `wineasio-rsasio` where it says `Driver=`. Do this for every Output and Input section. You could also fill in `WineASIO` instead. Alternatively, you can [download mine](https://github.com/theNizo/linux_rocksmith/blob/main/RS_ASIO.ini).
 
 And you're done with RS_ASIO. But in case you want to configure the inputs further (relevant for multiplayer), see [this](/guides/setup-rs-asio.md).
 
@@ -208,7 +206,7 @@ LD_PRELOAD=/usr/lib32/libjack.so %command%
 
 You can launch the game from Steam now. For the first few boot-ups, you have to remove window focus from Rocksmith (typically done with Alt+Tab) as soon as the window shows up. If it doesn't crash, continue with instructions.
 
-If there is NO message saying "No output device found, RS_ASIO is working fine. If you can hear sound, everything works fine.
+If there is NO message saying "No output device found", RS_ASIO is working fine. If you can hear sound, everything works fine.
 
 If you cannot hear sound, open QjackCtl and go to "Graph". We want to connect microphones to the inputs of Rocksmith and two outputs to our actual output device. Rocksmith will sometimes crash when messing with the patchbay. I recommend connecting everything before entering a profile.
 
@@ -246,7 +244,7 @@ With Proton's runtime, we can't start Rocksmith directly from the Steam Library 
 
 Go into your Steam Library and select "Add a game" ➞ "Add a Non-Steam Game" on the bottom left.
 
-Make sure you can see all files. Select the script we generated just now and add it. This will create a shortcut to the script, which I will refer to as "shortcut" from here on. For Proton versions 8 or lower, right click on the shortcut and select "Properties". Add these launch Options: `PIPEWIRE_LATENCY="256/48000" %command%`
+Make sure you can see all files. Select the script we generated just now and add it. This will create a shortcut to the script, which will be refered to as "shortcut" from here on. For Proton versions 8 or lower, right click on the shortcut and select "Properties". Add these launch Options: `PIPEWIRE_LATENCY="256/48000" %command%`
 
 You can now start the game from Steam. Use the shortcut, it will launch the actual game.
 
@@ -272,18 +270,11 @@ You can give the games in your Steam Library a custom look. A good Website for r
 
 You can take artwork from [Rocksmith](https://www.steamgriddb.com/game/1841), [Rocksmith 2014](https://www.steamgriddb.com/game/2295), [Rocksmith+](https://www.steamgriddb.com/game/5359161) or anything else you want. I would recommend something that makes the shortcut look different than the game.
 
-**Name and icon:** Go into the shortcut's Properties. Right under the text "Shortcut" you can change the game's icon and name (both show up in the list on the left in desktop mode). I recommend something like "Rocksmith 2014 - Launcher".
+Right-Click on the shortcut and select "Properties".
 
-**"Hero (banner/background)":** Located above the "Play" button in Steam. Right-click on it and choose "set custom background". You can theoretically set a logo too by right-clicking on the text, but I personally chose not to do that to clearly see which item is which.
+**Name and icon:** Can be found in "General". I recommend something like "Rocksmith 2014 - Launcher".
 
-**Grid (cover art):** For this it gets a bit harder. Go to `$HOME/.steam/steam/userdata/<number>/config/grid`. Since we added a hero, there should be a file that resembles it, so find it with an image viewer. It's called `<id>_hero.<file-ending>` we need the ID.
-copy the cover art into this folder and name it `<id>p.<file-ending>`.
-
-This is how the files look on my system:
-
-![](/img/grid-file.webp)
-
-Launch Big Picture Mode now and find the entry in your Library. It should now have artwork.
+**Everything else:** Can be found under "Customization"
 
 ---
 

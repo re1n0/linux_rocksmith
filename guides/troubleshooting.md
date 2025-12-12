@@ -30,7 +30,7 @@ Can happen sometimes when you use a different application, then focus Rocksmith 
 
 ## WineASIO
 
-[VBASIO](https://forum.vb-audio.com/viewtopic.php?t=1204) is a handy debugging tool (that I've also [used in the past](https://github.com/theNizo/linux_rocksmith/issues/22#issuecomment-1276457128). 
+[VBASIO](https://forum.vb-audio.com/viewtopic.php?t=1204) is a handy debugging tool (that I've also [used in the past](https://github.com/theNizo/linux_rocksmith/issues/22#issuecomment-1276457128)). 
 
 You can get verbose output of wineasio by using `/usr/bin/pw-jack -v -s 48000 -p 256 %command%`. -v stands for "verbose" and will give you additional information in the terminal.
 

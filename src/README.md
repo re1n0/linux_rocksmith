@@ -11,7 +11,3 @@ I have the base structure in base.md. I use variables which have the format of 0
 [generate.sh](/src/generate.sh) creates the guides and puts them in inside [guides/setup/](../guides/setup). Full-line Variable replacements are handled inside [generate.sh](/src/generate.sh), inline changes are made with [replace-inline.sh](/src/replace-inline.sh).
 
 The only more complex part is the [section compiling wineasio](/src/wineasio-install/).
-
-# Why Tabs instead of Spaces?
-
-Because I'm lettung YOU use your preferred indentation width, instead of forcing one onto you (also less characters).

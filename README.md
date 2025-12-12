@@ -6,7 +6,7 @@ These are a few Guides to get [Rocksmith 2014](https://store.steampowered.com/ap
 
 This is the bare minimum to get it to work. I don't know if certain changes recommended by other people have a performance impact.
 
-Last Distro + version tested on is litsed under the title of the guide.
+Last Distro + version tested on is listed under the title of the guide.
 
 I have only tested the Steam version.
 
@@ -14,7 +14,7 @@ I have only tested the Steam version.
 
 ## Prerequisites
 
-Don't install or copy Rocksmith from/to an NTFS drive. It will not start. (I think that's because of permissions, but I'm not sure.) There's probably a way, but it's easier not having to bother with it.
+Don't install Rocksmith onto an NTFS drive and also don't copy from it. The compatibility with NTFS is not good enough for this to work and you likely create more headaches for yourself than you solve.
 
 If you use Proton-GE, install scripts sometimes don't run. In that case, use Valve's Proton for the first start, then switch to Proton-GE.
 

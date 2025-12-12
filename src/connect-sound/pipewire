@@ -1,6 +1,6 @@
 If you cannot hear sound, open qpwgraph or a different JACK patchbay software of your choice. We want to connect microphones to the inputs of Rocksmith and two outputs to our actual output device. Rocksmith will sometimes crash when messing with the patchbay, so this is how you want to go about it:
 
-1. Ideally do it while the game starts up (logo screens appear). The Rocksmit logo is still safe, anything after that is not recommended.
+1. Ideally do it while the game starts up (logo screens appear). The Rocksmith logo is still safe, anything after that is not recommended.
 1. Connect one device to Rocksmith
 1. Window focus to Rocksmith
 1. Go to step one, until you have connected everything
