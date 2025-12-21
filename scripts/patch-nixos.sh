@@ -18,6 +18,7 @@ STEAMPATH="/home/${USER}/.steam/steam"
 WINEPREFIX="${STEAMPATH}/steamapps/compatdata/221680/pfx/"
 LAUNCH_OPTIONS="LD_PRELOAD=/usr/lib32/libjack.so PIPEWIRE_LATENCY=256/48000 %command%"
 LAUNCH_OPTIONS="LD_PRELOAD=/usr/lib32/librsshim.so:/usr/lib32/libjack.so PIPEWIRE_LATENCY=256/48000 %command%"
+CDLC_INSTALLER="RS2014-CDLC-Installer.exe"
 
 # Defaults
 RSASIOVER="0.7.4"
@@ -290,8 +291,8 @@ patch_wineasio_64bit() {
 
 patch_wineasio() {
     print_blue "======== Wineasio ========"
-    echo "[Wineasio] Install Wineasio"
 
+    echo "[Wineasio] Install Wineasio"
     for dll in "${WINEASIODLLS[@]}"; do
         if echo "$dll" | grep -q "32"; then
             patch_wineasio_32bit "$dll"
@@ -320,6 +321,26 @@ patch_rs_asio() {
     cp -a "RS_ASIO/"* "${STEAMPATH}/steamapps/common/Rocksmith2014/"
 }
 
+install_cdlc() {
+    print_blue "========= CDLC ========="
+
+    echo "[CDLC] Install CDLC Enabler"    
+    if [ ! -f "${CDLC_INSTALLER}" ]; then
+        wget "https://ignition4.customsforge.com/tools/download/cdlc-enabler" -O "${CDLC_INSTALLER}" 2>&1
+    fi
+
+    echo "[CDLC] Running CDLC Enabler"
+    "${WINE}" "$CDLC_INSTALLER" > /dev/null 2>&1
+}
+
+ask_cdlc() {
+    read -p "Would you like to install CDLC (y/N): " user_input
+    user_input=$(echo "$user_input" | tr '[:lower:]' '[:upper:]')
+    if [ "$user_input" == "Y" ]; then
+        install_cdlc
+    fi
+}
+
 
 finalise() {
     print_blue "======== DONE ========"
@@ -345,6 +366,7 @@ finalise() {
 clean() {
     rm "release-${RSASIOVER}.zip"
     rm -rf RS_ASIO
+    rm "${CDLC_INSTALLER}"
 }
 
 
@@ -354,5 +376,6 @@ print_system_info
 check_and_prepare
 patch_wineasio
 patch_rs_asio
+ask_cdlc
 clean
 finalise
