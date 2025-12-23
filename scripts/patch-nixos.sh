@@ -2,6 +2,21 @@
 
 set -e
 
+# show usage
+if [[ $# -gt 0 && $1 = "--help" ]]; then
+	echo -e "
+Usage: ./patch-nixos-sh [ OPTIONS ]
+
+-s, --steampath=    The Steam Library where Rocksmith is installed to. usually \$USER/.steam/steam
+-w, --wineprefix=   The prefix for rocksmith
+-r, --rsasiover=    Version of RS_ASIO you want to use
+-p, --protonpath=   Location of the Proton version you want to use
+-P, --protontype=   \"files\" or \"dist\" - which one your chosen Proton version uses
+-C, --cdlc          Patch the game for use with CDLC too
+"
+	exit 0
+fi
+
 ######################### VARS ###############################
 USER=$(whoami)
 
@@ -73,7 +88,7 @@ choose_proton() {
 	echo "Please choose your Proton version that you use to run Rocksmith:"
 	print_orange "0) Proton 10.0 [Default]"
 	echo "1) Proton - Experimental"
-	echo "2) Proton 9.0 (Beta)"
+	echo "2) Proton 9.0"
 	echo "3) Proton 8.0"
 
 	read -p "Choose your Proton Version (0-3): " USERPROTONVER
@@ -138,52 +153,20 @@ parse_args() {
 	while [ "$#" -gt 0 ]; do
 		case "$1" in
 		--steampath=*) normalized+=("-s" "${1#--steampath=}") ;;
-		-s)
-			if [ -z "${2:-}" ] || [[ "$2" == -* ]]; then
-				echo "Error: -s requires an argument" >&2
-				exit 2
-			fi
-			normalized+=("-s" "$2")
-			shift
-			;;
 		--wineprefix=*) normalized+=("-w" "${1#--wineprefix=}") ;;
-		-w)
-			if [ -z "${2:-}" ] || [[ "$2" == -* ]]; then
-				echo "Error: -w requires an argument" >&2
-				exit 2
-			fi
-			normalized+=("-w" "$2")
-			shift
-			;;
 		--rsasiover=*) normalized+=("-r" "${1#--rsasiover=}") ;;
-		-r)
-			if [ -z "${2:-}" ] || [[ "$2" == -* ]]; then
-				echo "Error: -r requires an argument" >&2
-				exit 2
-			fi
-			normalized+=("-r" "$2")
-			shift
-			;;
 		--protonpath=*) normalized+=("-p" "${1#--protonpath=}") ;;
-		-p)
-			if [ -z "${2:-}" ] || [[ "$2" == -* ]]; then
-				echo "Error: -p requires an argument" >&2
-				exit 2
-			fi
-			normalized+=("-p" "$2")
-			shift
-			;;
 		--protontype=*) normalized+=("-P" "${1#--protontype=}") ;;
-		-P)
-			if [ -z "${2:-}" ] || [[ "$2" == -* ]]; then
-				echo "Error: -P requires an argument" >&2
-				exit 2
-			fi
-			normalized+=("-P" "$2")
-			shift
-			;;
 		--cdlc) normalized+=("-C") ;;
 		-C) normalized+=("-C") ;;
+		-s|-w|-r|-p|-P)
+			if [ -z "${2:-}" ] || [[ "$2" == -* ]]; then
+				echo "Error: $1 requires an argument" >&2
+				exit 2
+			fi
+			normalized+=("$1" "$2")
+			shift
+			;;
 		--* | -*)
 			echo "Unknown option: $1" >&2
 			exit 2
@@ -253,7 +236,7 @@ greet() {
 }
 
 print_system_info() {
-	print_blue "======== System Info "========
+	print_blue "======== System Info ========"
 	echo "NixOS $(nixos-version) [$(getconf LONG_BIT)-bit]"
 	echo "Kernel $(uname -r)"
 	echo "Wine $("${WINE}" --version)"
@@ -273,7 +256,7 @@ check_installed() {
 }
 
 check_and_prepare() {
-	print_blue "======== Check and prepare "========
+	print_blue "======== Check and prepare ========"
 	check_passed=true
 
 	CHECKPATHS=(
